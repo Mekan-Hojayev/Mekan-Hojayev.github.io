@@ -5,7 +5,7 @@
 👋 Hello! I'm Mekan, a Data Science developer with a strong background in mathematics and a passion for solving complex problems.
 
 🎓 **Education**
-- MSc in Data Science, Artificial Intelligence and Machine Learning, Skolkovo Institute of Science and Technology (SKOLTECH) (2022 - Present)
+- MSc in Data Science, Artificial Intelligence and Machine Learning, Skolkovo Institute of Science and Technology (SKOLTECH) (2022 - 2024)
 - Diploma in Technology of Electric and Heat Energy Generation, The State Energy Institute of Turkmenistan (2015 - 2020)
   - GPA: 5.0/5.0 (High Honor Student)
 
@@ -17,16 +17,16 @@
 🏆 **Awards and Achievements**
 - Multiple medals in International Mathematical Olympiads, including:
   - Silver Medal, 26th International Mathematics Competition for University Students (2019)
+  - Silver Medal, 25th International Mathematics Competition for University Students (2018)
   - Silver Medal, 12th South Eastern European Mathematical Olympiad (2018)
   - Winner of the Scientific Competition among Youth of Turkmenistan (2018)
 
 🛠️ **Skills**
-- Programming: Python
+- Programming: Python, Arduino, Django, git
 - Data Analysis and Machine Learning
 - Statistics and Probability
 - Critical Thinking and Complex Problem Solving
-- Microsoft Office Suite
-- Adobe Photoshop, Corel Video Studio
+- Adobe Photoshop, Corel Video Studio, Canva
 
 🌐 **Languages**
 - Turkmen (Native)
@@ -40,7 +40,7 @@
 - Combined Stream Gas Plants
 
 📫 **Contact**
-- Email: mekan.hojayev@skoltech.ru | mekan.097@mail.ru
-- Phone: +7 901 513 84 57
+- Email: mhojayev@mir-initiative.com | mekanhojayev97@gmail.com | mekan.hojayev@skoltech.ru | mekan.097@mail.ru
+- Phone: +993 62 02 35 26 | +993 71 67 97 74 | +7 901 513 84 57
 
 Feel free to explore my repositories and don't hesitate to reach out for collaborations or discussions!
