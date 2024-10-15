@@ -1,2 +1,1 @@
-# Mekan-Hojayev.github.io
-My profile
+# Data science developer at Skolkovo
