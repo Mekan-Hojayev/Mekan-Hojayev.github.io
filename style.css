@@ -26,12 +26,37 @@ body {
 }
 
 /* Header Styles */
-.header {
+/* .header {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
     padding: 3rem 0;
     text-align: center;
+} */
+.header {
+    background: url('https://i.gifer.com/QWc9.gif') center center/cover;
+    position: relative;
+    color: white;
+    padding: 3rem 0;
+    text-align: center;
 }
+
+/* Add an overlay to make text more readable */
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.header .container {
+    position: relative;
+    z-index: 2;
+}
+
 
 .profile-img {
     width: 180px;
