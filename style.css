@@ -146,6 +146,47 @@ body {
     font-size: 0.9rem;
 }
 
+.language-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.language-item {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.language-name {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.language-level {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: white;
+}
+
+.native {
+    background: #2ecc71;
+}
+
+.c1 {
+    background: #3498db;
+}
+
+.b2 {
+    background: #9b59b6;
+}
+
+
 /* Timeline */
 .timeline {
     position: relative;
