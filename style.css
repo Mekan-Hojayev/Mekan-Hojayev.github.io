@@ -35,7 +35,7 @@ body {
 .header {
     background: url('https://i.gifer.com/QWc9.gif') center center/cover;
     position: relative;
-    color: white;
+/*     color: white; */
     padding: 3rem 0;
     text-align: center;
 }
