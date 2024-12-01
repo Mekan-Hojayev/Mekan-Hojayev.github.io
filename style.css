@@ -15,6 +15,9 @@
     width: 150px; /* Adjust size of the GIF */
     height: auto;
 }
+#loading-screen {
+    transition: opacity 0.5s ease; /* Adjust duration for smoothness */
+}
 
 /* Modern Reset */
 *,
