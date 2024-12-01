@@ -74,6 +74,56 @@ body {
     box-shadow: 0 8px 15px rgba(0,0,0,0.1);
 }
 
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.achievement-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.achievement-card:hover {
+    transform: translateY(-5px);
+}
+
+.achievement-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+}
+
+.achievement-card p {
+    margin: 0.3rem 0;
+}
+
+.achievement-card span {
+    font-weight: 600;
+}
+
+.achievement-card .location {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.achievement-card .year {
+    color: var(--primary-color);
+    font-weight: 500;
+    margin-top: 0.5rem;
+}
+
+.achievement-card sup {
+    font-size: 0.6em;
+    font-weight: normal;
+}
+
+
 /* Skills Section */
 .skills-container {
     display: grid;
