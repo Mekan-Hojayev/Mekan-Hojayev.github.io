@@ -54,13 +54,59 @@ body {
     padding: 3rem 0;
     text-align: center;
 } */
+/* .header {
+    background: url('https://i.gifer.com/QWc9.gif') center center/cover;
+    position: relative;
+    color: white;
+    padding: 3rem 0;
+    text-align: center;
+} */
+
+/* Code-like Font */
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap');
+
 .header {
     background: url('https://i.gifer.com/QWc9.gif') center center/cover;
     position: relative;
     color: white;
     padding: 3rem 0;
     text-align: center;
+    font-family: 'Source Code Pro', monospace;
 }
+
+/* Profile Image */
+.profile-img {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 4px solid white;
+    margin-bottom: 1.5rem;
+}
+
+/* Typing Text Animation */
+.typing-text {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 2px solid white;
+    font-size: 1.5rem;
+}
+
+/* Typing Animation */
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes blink {
+    from { border-right-color: white; }
+    to { border-right-color: transparent; }
+}
+
+.typing-text {
+    animation: typing 3s steps(30, end), blink 0.5s step-end infinite;
+}
+
 
 /* Add an overlay to make text more readable */
 /* .header::before {
