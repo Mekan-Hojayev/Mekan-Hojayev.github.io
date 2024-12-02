@@ -1,13 +1,21 @@
-// Text for each line
-const lines = [
-    { text: "Mekan Hojayev", id: "line1", typingSpeed: 100, delayAfter: 500 },
-    { text: "Data Scientist & Mathematical Olympiad Medalist", id: "line2", typingSpeed: 50, delayAfter: 500 },
-    { text: "NLP & Computer Vision Specialist | Building AI Solutions for LegalTech | Automating Document Workflows with ML | Problem Solver", id: "line3", typingSpeed: 50, delayAfter: 1000 }
+// Lines for the third line
+const dynamicLines = [
+    "NLP Specialist",
+    "Computer Vision Specialist",
+    "Building AI Solutions for LegalTech",
+    "Automating Document Workflows with ML",
+    "Problem Solver"
 ];
 
-// Function to simulate typing
-function typeWriter(elementId, text, typingSpeed, callback) {
-    const element = document.getElementById(elementId);
+// Typing settings
+const typingSpeed = 100; // Speed of typing characters
+const erasingSpeed = 50; // Speed of erasing characters
+const delayBetweenLines = 1500; // Delay after typing each line
+
+// Dynamic typing function
+let currentLineIndex = 0;
+
+function typeWriter(element, text, speed, callback) {
     let i = 0;
     element.textContent = ""; // Clear text before typing
 
@@ -15,37 +23,45 @@ function typeWriter(elementId, text, typingSpeed, callback) {
         if (i < text.length) {
             element.textContent += text.charAt(i);
             i++;
-            setTimeout(type, typingSpeed);
+            setTimeout(type, speed);
         } else if (callback) {
-            setTimeout(callback, 500); // Pause before the next callback
+            setTimeout(callback, delayBetweenLines); // Delay before calling the next function
         }
     }
     type();
 }
 
-// Start typing each line sequentially
-function startTyping() {
-    let currentLine = 0;
+function eraseWriter(element, speed, callback) {
+    let text = element.textContent;
+    let i = text.length;
 
-    function next() {
-        if (currentLine < lines.length) {
-            const { text, id, typingSpeed, delayAfter } = lines[currentLine];
-            typeWriter(id, text, typingSpeed, () => {
-                setTimeout(next, delayAfter);
-            });
-            currentLine++;
-        } else {
-            // Restart the sequence after finishing all lines
-            setTimeout(() => {
-                currentLine = 0;
-                document.querySelectorAll(".typing-text").forEach(el => (el.textContent = ""));
-                next();
-            }, 1000); // Delay before restarting
+    function erase() {
+        if (i > 0) {
+            element.textContent = text.substring(0, i - 1);
+            i--;
+            setTimeout(erase, speed);
+        } else if (callback) {
+            callback();
         }
     }
+    erase();
+}
 
-    next();
+function startDynamicTyping() {
+    const dynamicLineElement = document.getElementById("dynamic-line");
+
+    function cycleLines() {
+        const text = dynamicLines[currentLineIndex];
+        typeWriter(dynamicLineElement, text, typingSpeed, () => {
+            eraseWriter(dynamicLineElement, erasingSpeed, () => {
+                currentLineIndex = (currentLineIndex + 1) % dynamicLines.length;
+                cycleLines();
+            });
+        });
+    }
+
+    cycleLines();
 }
 
 // Start typing when the page loads
-window.addEventListener("load", startTyping);
+window.addEventListener("load", startDynamicTyping);
