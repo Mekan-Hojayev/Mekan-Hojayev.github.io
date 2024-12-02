@@ -17,11 +17,10 @@ let currentLineIndex = 0;
 
 function typeWriter(element, text, speed, callback) {
     let i = 0;
-    element.textContent = ""; // Clear text before typing
 
     function type() {
         if (i < text.length) {
-            element.textContent += text.charAt(i);
+            element.textContent = text.substring(0, i + 1); // Update text progressively
             i++;
             setTimeout(type, speed);
         } else if (callback) {
@@ -37,11 +36,11 @@ function eraseWriter(element, speed, callback) {
 
     function erase() {
         if (i > 0) {
-            element.textContent = text.substring(0, i - 1);
+            element.textContent = text.substring(0, i - 1); // Erase progressively
             i--;
             setTimeout(erase, speed);
         } else if (callback) {
-            callback();
+            callback(); // Transition to next line typing
         }
     }
     erase();
