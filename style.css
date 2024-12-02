@@ -85,7 +85,7 @@ body {
 }
 
 /* Typing Text Container */
-.typing-container {
+.typing-line-container {
     margin-top: 1.5rem;
 }
 
@@ -97,7 +97,7 @@ body {
     border-right: 2px solid white;
 }
 
-/* Typing Animation */
+/* Animations */
 @keyframes typing {
     from { width: 0; }
     to { width: 100%; }
@@ -108,9 +108,10 @@ body {
     to { border-right-color: transparent; }
 }
 
+/* Typing Text */
 .typing-text {
     font-size: 1.5rem;
-    animation: typing 3s steps(30, end) infinite, blink 0.5s step-end infinite;
+    animation: blink 0.5s step-end infinite;
 }
 
 /* Adjust font size for line 1 */
