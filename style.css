@@ -62,9 +62,10 @@ body {
     text-align: center;
 } */
 
-/* Code-like Font */
+/* Import Coding Font */
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap');
 
+/* Header */
 .header {
     background: url('https://i.gifer.com/QWc9.gif') center center/cover;
     position: relative;
@@ -83,13 +84,17 @@ body {
     margin-bottom: 1.5rem;
 }
 
-/* Typing Text Animation */
+/* Typing Text Container */
+.typing-container {
+    margin-top: 1.5rem;
+}
+
+/* Typing Text Effect */
 .typing-text {
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
     border-right: 2px solid white;
-    font-size: 1.5rem;
 }
 
 /* Typing Animation */
@@ -104,7 +109,14 @@ body {
 }
 
 .typing-text {
-    animation: typing 3s steps(30, end), blink 0.5s step-end infinite;
+    font-size: 1.5rem;
+    animation: typing 3s steps(30, end) infinite, blink 0.5s step-end infinite;
+}
+
+/* Adjust font size for line 1 */
+.typing-text.large {
+    font-size: 2.5rem;
+    font-weight: bold;
 }
 
 
