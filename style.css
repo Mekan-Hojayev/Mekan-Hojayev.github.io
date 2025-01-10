@@ -414,3 +414,18 @@ body {
         padding: 1.5rem;
     }
 }
+
+#dynamic-line-container {
+    width: 300px; /* Set a fixed width */
+    height: 50px; /* Set a fixed height */
+    display: flex; /* Center content */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    overflow: hidden; /* Prevent overflow if the text exceeds dimensions */
+}
+
+#dynamic-line {
+    font-size: 1.2rem; /* Adjust font size */
+    white-space: nowrap; /* Prevent line wrapping */
+    text-align: center;
+}

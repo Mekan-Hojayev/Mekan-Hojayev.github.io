@@ -62,5 +62,13 @@ function startDynamicTyping() {
     cycleLines();
 }
 
+function setContainerSize() {
+    const container = document.getElementById("dynamic-line-container");
+    const dynamicLineElement = document.getElementById("dynamic-line");
+
+    const maxTextLength = Math.max(...dynamicLines.map(line => line.length));
+    const charWidth = 10; // Approximate width per character in px
+    container.style.width = `${maxTextLength * charWidth}px`;
+}
 // Start typing when the page loads
 window.addEventListener("load", startDynamicTyping);
