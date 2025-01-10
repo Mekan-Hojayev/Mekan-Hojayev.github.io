@@ -333,7 +333,7 @@ body {
     position: relative;
 }
 
-.timeline.date {
+.timeline-item.date {
     color: #666;
     font-size: 0.9rem;
 }
