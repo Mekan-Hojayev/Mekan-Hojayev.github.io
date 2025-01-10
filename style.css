@@ -334,8 +334,9 @@ body {
 }
 
 .timeline-item .date {
-    color: #666;
-    font-size: 0.9rem;
+    color: gray;
+    font-size: 0.8rem;
+    font-style: italic;
 }
 
 .timeline-item::before {
