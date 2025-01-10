@@ -333,6 +333,11 @@ body {
     position: relative;
 }
 
+.timeline.date {
+    color: #666;
+    font-size: 0.9rem;
+}
+
 .timeline-item::before {
     content: '';
     position: absolute;
