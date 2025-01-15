@@ -240,23 +240,25 @@ body {
     background-color: #f9f9f9;
 }
 
-.extra-achievements {
+.hidden {
     display: none;
 }
 
 .toggle-button {
-    padding: 10px 15px;
     background-color: #4CAF50;
     color: white;
     border: none;
+    padding: 10px 20px;
     cursor: pointer;
-    margin-top: 20px;
     font-size: 16px;
+    margin-top: 20px;
+    display: inline-block;
 }
 
 .toggle-button:hover {
     background-color: #45a049;
 }
+
 
 /* Skills Section */
 .skills-container {

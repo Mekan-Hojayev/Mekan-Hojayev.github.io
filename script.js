@@ -11,14 +11,22 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function toggleAchievements() {
-    var extraAchievements = document.querySelector('.extra-achievements');
-    var button = document.querySelector('.toggle-button');
-
-    if (extraAchievements.style.display === "none") {
-        extraAchievements.style.display = "block";
-        button.textContent = "Show Less"; // Change button text to "Show Less"
+    // Get all elements with the class 'hidden'
+    const hiddenAchievements = document.querySelectorAll('.hidden');
+    const button = document.querySelector('.toggle-button');
+    
+    // Check if the hidden achievements are currently shown
+    if (hiddenAchievements[0].style.display === "none") {
+        // Show all hidden achievements
+        hiddenAchievements.forEach(achievement => {
+            achievement.style.display = "block";
+        });
+        button.textContent = "Show Less"; // Change button text
     } else {
-        extraAchievements.style.display = "none";
-        button.textContent = "Show More"; // Change button text to "Show More"
+        // Hide all hidden achievements
+        hiddenAchievements.forEach(achievement => {
+            achievement.style.display = "none";
+        });
+        button.textContent = "Show More"; // Change button text back
     }
 }
