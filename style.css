@@ -188,6 +188,7 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
     margin-top: 1.5rem;
+    align-items: stretch; /* This will stretch all items to the same height */
 }
 
 /* .achievement-card {
@@ -471,4 +472,14 @@ body {
     .section {
         padding: 1.5rem;
     }
+}
+
+#dynamic-line {
+    font-size: 1.5rem;  /* Adjust size as needed */
+    white-space: nowrap; /* Prevent text from wrapping and changing the width */
+    overflow: hidden;    /* Hide overflowed content */
+    display: inline-block;
+    min-width: 100%;     /* Ensure it takes up at least the full width of its container */
+    height: 2rem;        /* Set a height for the typing effect */
+    line-height: 2rem;   /* Set line-height to align text properly */
 }
