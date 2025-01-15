@@ -183,6 +183,12 @@ body {
     box-shadow: 0 8px 15px rgba(0,0,0,0.1);
 }
 
+.edu-item .date {
+    color: gray;
+    font-size: 0.8rem;
+    font-style: oblique;
+}
+
 .achievements-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
