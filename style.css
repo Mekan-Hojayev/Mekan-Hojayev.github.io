@@ -232,6 +232,31 @@ body {
     font-weight: normal;
 }
 
+.achievement-card {
+    /* Styling for the individual cards */
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 10px;
+    background-color: #f9f9f9;
+}
+
+.extra-achievements {
+    display: none;
+}
+
+.toggle-button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.toggle-button:hover {
+    background-color: #45a049;
+}
 
 /* Skills Section */
 .skills-container {
