@@ -205,8 +205,8 @@ body {
     padding: 1.5rem;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     transition: transform 0.3s ease;
-    height: 300px;  /* Fixed height */
-    max-height: 300px; /* Max height to avoid excessive stretching */
+    height: 250px;  /* Fixed height */
+    max-height: 250px; /* Max height to avoid excessive stretching */
     overflow-y: auto;  /* Allow scrolling if content exceeds the height */
     display: flex;
     flex-direction: column;
