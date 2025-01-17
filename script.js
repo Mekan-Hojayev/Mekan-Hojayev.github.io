@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const user_message = document.getElementById("user_message").value;
 
         // Send email using EmailJS
-        emailjs.send("service_lkhcaac", "template_1gizd0r", {
+        emailjs.send("service_lkhcaac", "template_3n0lii6", {
             user_email: user_email,
             message: user_message,
         })
