@@ -31,3 +31,31 @@ function toggleAchievements() {
     }
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+    // Initialize EmailJS with your user ID
+    emailjs.init("j9heZk1vsz2-1ijFK"); // Replace with your EmailJS public key
+
+    const contactForm = document.getElementById("contact-form");
+
+    contactForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        // Get form values
+        const user_email = document.getElementById("user_email").value;
+        const user_message = document.getElementById("user_message").value;
+
+        // Send email using EmailJS
+        emailjs.send("service_lkhcaac", "template_1gizd0r", {
+            user_email: user_email,
+            message: user_message,
+        })
+        .then(() => {
+            alert("Message sent successfully!");
+            contactForm.reset();
+        })
+        .catch((error) => {
+            console.error("Error sending message:", error);
+            alert("Failed to send the message. Please try again later.");
+        });
+    });
+});
