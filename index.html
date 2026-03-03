@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mekan Hojayev — Data Scientist</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cabinet+Grotesk:wght@300;400;500;700;800;900&family=JetBrains+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#04060a; --s1:#080c12; --s2:#0c1219;
+  --border:rgba(255,255,255,0.06); --border2:rgba(255,255,255,0.12);
+  --c1:#00ffe0; --c2:#ff3c5a; --c3:#ffc340;
+  --text:#dce8f0; --dim:#4a6070; --muted:#1e2e3a;
+  --gold:#ffc340; --silver:#a0b4c0; --bronze:#cd7c3a;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Cabinet Grotesk',sans-serif;font-size:15px;line-height:1.7;overflow-x:hidden;cursor:none}
+
+/* CURSOR */
+#cursor{position:fixed;width:10px;height:10px;background:var(--c1);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);mix-blend-mode:difference;transition:width .15s,height .15s}
+#cursor-ring{position:fixed;width:38px;height:38px;border:1px solid rgba(0,255,224,.45);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:width .25s,height .25s,border-color .25s}
+body:has(a:hover) #cursor,body:has(button:hover) #cursor{width:5px;height:5px}
+body:has(a:hover) #cursor-ring,body:has(button:hover) #cursor-ring{width:60px;height:60px;border-color:var(--c1)}
+
+/* CANVAS */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* NOISE */
+.noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.032;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* PROGRESS */
+#progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--c1),var(--c2));z-index:10000;width:0%;transition:width .08s}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:9000;display:flex;align-items:center;justify-content:space-between;padding:0 64px;height:70px;background:rgba(4,6,10,.72);backdrop-filter:blur(24px) saturate(180%);border-bottom:1px solid var(--border);transition:transform .4s ease}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:var(--text);text-decoration:none}.logo span{color:var(--c1)}
+.nav-links{display:flex;list-style:none;gap:36px}
+.nav-links a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-decoration:none;position:relative;transition:color .2s}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:100%;height:1px;background:var(--c1);transition:right .3s ease}
+.nav-links a:hover{color:var(--c1)}.nav-links a:hover::after{right:0}
+.nav-cta{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--bg);background:var(--c1);padding:10px 20px;text-decoration:none;border:1px solid var(--c1);transition:background .2s,color .2s}
+.nav-cta:hover{background:transparent;color:var(--c1)}
+
+/* MAIN */
+main{position:relative;z-index:2}
+
+/* HERO */
+#hero{min-height:100vh;display:grid;grid-template-columns:1fr 400px;align-items:center;padding:130px 64px 80px;gap:60px;overflow:hidden}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--c1);margin-bottom:24px;opacity:0;animation:fadeUp .8s .2s forwards}
+.hero-badge::before{content:'';width:28px;height:1px;background:var(--c1)}
+.dot-pulse{width:6px;height:6px;border-radius:50%;background:var(--c1);animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.6)}}
+.hero-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(72px,9.5vw,140px);line-height:.92;letter-spacing:-.5px;color:var(--text);opacity:0;animation:fadeUp .8s .35s forwards}
+.hero-name .outline{-webkit-text-stroke:1.5px var(--c1);color:transparent;display:block}
+.hero-typewriter{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--dim);margin:20px 0 32px;min-height:20px;opacity:0;animation:fadeUp .8s .5s forwards}
+.hero-typewriter .tw-prefix{color:var(--c1)}
+.tw-cursor{display:inline-block;width:2px;height:13px;background:var(--c1);vertical-align:middle;margin-left:2px;animation:blink 1s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.hero-desc{max-width:500px;color:var(--dim);font-size:16px;line-height:1.85;margin-bottom:44px;opacity:0;animation:fadeUp .8s .65s forwards}
+.hero-desc strong{color:var(--text);font-weight:600}
+.hero-btns{display:flex;gap:16px;opacity:0;animation:fadeUp .8s .8s forwards}
+
+/* MAG BUTTON */
+.btn-mag{position:relative;display:inline-flex;align-items:center;gap:8px;padding:15px 30px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border:1px solid;overflow:hidden;transition:color .25s}
+.btn-mag::before{content:'';position:absolute;inset:0;transform:translateY(101%);transition:transform .3s cubic-bezier(.76,0,.24,1)}
+.btn-mag:hover::before{transform:translateY(0)}
+.btn-mag span{position:relative;z-index:1}
+.btn-primary{border-color:var(--c1);color:var(--bg);background:var(--c1)}
+.btn-primary::before{background:transparent}
+.btn-primary:hover{color:var(--c1)}
+.btn-ghost{border-color:var(--border2);color:var(--dim)}
+.btn-ghost::before{background:var(--c1)}
+.btn-ghost:hover{color:var(--bg)}
+
+/* HERO CARD */
+.hero-card{background:var(--s1);border:1px solid var(--border);padding:36px;position:relative;opacity:0;animation:fadeLeft .9s .4s forwards}
+.hero-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--c1),var(--c2),var(--c3))}
+.profile-avatar{width:72px;height:72px;border-radius:50%;border:2px solid var(--c1);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--c1);background:var(--s2);margin-bottom:16px;overflow:hidden}
+.profile-avatar img{width:100%;height:100%;object-fit:cover}
+.card-name{font-family:'Cabinet Grotesk',sans-serif;font-size:20px;font-weight:800;color:var(--text);margin-bottom:3px}
+.card-role{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--c1);letter-spacing:.1em;text-transform:uppercase;margin-bottom:24px}
+.card-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.cstat{background:var(--s2);border:1px solid var(--border);padding:14px;text-align:center}
+.cstat-num{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--c1);display:block;line-height:1;margin-bottom:3px}
+.cstat-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
+.card-langs{display:flex;gap:6px;flex-wrap:wrap}
+.lpill{padding:4px 10px;background:var(--s2);border:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:.08em}
+.lpill.on{border-color:var(--c1);color:var(--c1);background:rgba(0,255,224,.06)}
+
+/* SECTIONS */
+section{position:relative;padding:110px 64px;border-top:1px solid var(--border)}
+.s-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:64px;gap:24px}
+.s-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--c1);letter-spacing:.2em;text-transform:uppercase;margin-bottom:8px}
+.s-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(38px,5vw,68px);letter-spacing:1px;color:var(--text);line-height:1}
+.s-line{flex:1;height:1px;background:var(--border);max-width:280px;margin-bottom:8px}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-36px);transition:opacity .7s ease,transform .7s ease}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(36px);transition:opacity .7s ease,transform .7s ease}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start}
+.about-body{font-size:16px;color:var(--dim);line-height:2}
+.about-body strong{color:var(--text);font-weight:600}
+.about-body .hl{color:var(--c1)}
+.sk-head{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px}
+.skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.skill-pill{padding:11px 14px;background:var(--s1);border:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);display:flex;align-items:center;gap:9px;transition:border-color .2s,color .2s,background .2s;cursor:default}
+.skill-pill:hover{border-color:var(--c1);color:var(--c1);background:rgba(0,255,224,.04)}
+.skill-pill .dot{width:4px;height:4px;border-radius:50%;background:var(--c1);flex-shrink:0}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:2px}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--c1),transparent)}
+.t-item{display:grid;grid-template-columns:170px 1fr;gap:44px;padding:44px 0 44px 52px;border-bottom:1px solid var(--border);position:relative}
+.t-item::before{content:'';position:absolute;left:-5px;top:52px;width:11px;height:11px;border-radius:50%;background:var(--bg);border:2px solid var(--c1);box-shadow:0 0 14px var(--c1);transition:background .2s}
+.t-item:hover::before{background:var(--c1)}
+.t-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.08em;display:block;margin-bottom:8px}
+.t-type{display:inline-block;padding:3px 8px;background:rgba(0,255,224,.08);border:1px solid rgba(0,255,224,.2);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--c1);letter-spacing:.1em;text-transform:uppercase}
+.t-role{font-family:'Cabinet Grotesk',sans-serif;font-size:21px;font-weight:800;color:var(--text);margin-bottom:4px;line-height:1.2}
+.t-company{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--c1);margin-bottom:12px;letter-spacing:.05em}
+.t-desc{font-size:14px;color:var(--dim);line-height:1.8}
+
+/* EDUCATION */
+.edu-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.edu-card{background:var(--s1);border:1px solid var(--border);padding:38px;position:relative;overflow:hidden;transition:border-color .3s,transform .3s}
+.edu-card:hover{border-color:var(--border2);transform:translateY(-4px)}
+.edu-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--c1),var(--c2));transform:scaleX(0);transform-origin:left;transition:transform .4s ease}
+.edu-card:hover::after{transform:scaleX(1)}
+.edu-big{font-family:'Bebas Neue',sans-serif;font-size:72px;color:var(--muted);line-height:1;margin-bottom:14px;display:block}
+.edu-school{font-family:'Cabinet Grotesk',sans-serif;font-size:17px;font-weight:800;color:var(--text);margin-bottom:7px;line-height:1.3}
+.edu-degree{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--c1);letter-spacing:.08em;margin-bottom:16px}
+.edu-foot{display:flex;justify-content:space-between;align-items:center;padding-top:18px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px}
+.edu-foot .yr{color:var(--dim)}.edu-foot .gpa{color:var(--c3)}
+
+/* MEDALS */
+.medals-filter{display:flex;gap:8px;margin-bottom:36px;flex-wrap:wrap}
+.f-btn{padding:7px 16px;background:transparent;border:1px solid var(--border);color:var(--dim);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.f-btn:hover,.f-btn.active{border-color:var(--c1);color:var(--c1);background:rgba(0,255,224,.06)}
+.medals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px}
+.medal-card{background:var(--s1);border:1px solid var(--border);padding:18px 22px;display:flex;gap:14px;align-items:flex-start;text-decoration:none;color:inherit;transition:border-color .25s,transform .25s;position:relative;overflow:hidden}
+.medal-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(0,255,224,.04);transition:width .3s}
+.medal-card:hover{border-color:var(--border2);transform:translateX(4px)}
+.medal-card:hover::before{width:100%}
+.medal-emoji{font-size:22px;flex-shrink:0;margin-top:2px}
+.medal-comp{font-family:'Cabinet Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--text);line-height:1.4;margin-bottom:4px}
+.medal-award{font-family:'JetBrains Mono',monospace;font-size:11px;margin-bottom:5px;font-weight:500;letter-spacing:.03em}
+.medal-loc{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.05em}
+.c-gold{color:var(--gold)}.c-silver{color:var(--silver)}.c-bronze{color:var(--bronze)}.c-accent{color:var(--c3)}
+.medals-extra{display:none}.medals-extra.open{display:contents}
+.show-more{margin-top:18px;width:100%;padding:15px;background:transparent;border:1px dashed var(--dim);color:var(--dim);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.show-more:hover{border-color:var(--c1);color:var(--c1)}
+
+/* RESEARCH */
+.r-item{display:grid;grid-template-columns:90px 1fr auto;gap:36px;padding:34px 0;border-bottom:1px solid var(--border);align-items:start;transition:padding-left .3s}
+.r-item:hover{padding-left:16px}
+.r-year{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);padding-top:4px;letter-spacing:.08em}
+.r-title{font-family:'Cabinet Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:10px;line-height:1.4;transition:color .2s}
+.r-item:hover .r-title{color:var(--c1)}
+.r-tags{display:flex;flex-wrap:wrap;gap:6px}
+.rtag{padding:3px 9px;background:rgba(0,255,224,.05);border:1px solid rgba(0,255,224,.12);color:var(--c1);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.r-arrow{font-size:18px;color:var(--muted);transition:color .2s,transform .2s;padding-top:4px}
+.r-item:hover .r-arrow{color:var(--c1);transform:translateX(4px)}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px}
+.contact-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(34px,3.8vw,56px);color:var(--text);line-height:1.1;margin-bottom:28px;letter-spacing:1px}
+.contact-big span{color:var(--c1)}
+.c-links{display:flex;flex-direction:column;gap:9px;margin-bottom:36px}
+.c-link{display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--s1);border:1px solid var(--border);color:var(--dim);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.05em;transition:all .2s;position:relative;overflow:hidden}
+.c-link::before{content:'';position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(0,255,224,.06);transition:width .3s}
+.c-link:hover{border-color:var(--c1);color:var(--c1)}.c-link:hover::before{width:100%}
+.c-link-ico{width:18px;text-align:center;font-size:14px;position:relative}
+.contact-form{display:flex;flex-direction:column;gap:18px}
+.f-row{display:flex;flex-direction:column;gap:6px}
+.f-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase}
+.f-input,.f-textarea{background:var(--s1);border:1px solid var(--border);padding:13px 16px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;transition:border-color .2s;resize:none}
+.f-input:focus,.f-textarea:focus{border-color:var(--c1)}
+.f-textarea{min-height:120px}
+.send-btn{display:inline-flex;align-items:center;gap:8px;padding:15px 30px;background:var(--c1);border:none;color:var(--bg);font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:background .2s,transform .15s;align-self:flex-start}
+.send-btn:hover{background:#00ccb4;transform:translateY(-2px)}
+
+/* FOOTER */
+footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:36px 64px;display:flex;justify-content:space-between;align-items:center}
+.foot-l{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:var(--dim)}.foot-l span{color:var(--c1)}
+.foot-r{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+
+/* KEYFRAMES */
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeLeft{from{opacity:0;transform:translateX(36px)}to{opacity:1;transform:translateX(0)}}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--c1)}
+
+@media(max-width:1024px){
+  nav{padding:0 24px}.nav-links{display:none}
+  #hero{grid-template-columns:1fr;padding:120px 24px 80px}.hero-card{display:none}
+  section{padding:80px 24px}
+  .about-grid,.edu-grid,.contact-grid{grid-template-columns:1fr;gap:44px}
+  .t-item{grid-template-columns:1fr;gap:10px;padding-left:38px}
+  .r-item{grid-template-columns:70px 1fr;gap:18px}.r-arrow{display:none}
+  footer{flex-direction:column;gap:10px;padding:28px 24px;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div id="progress"></div>
+<div class="noise"></div>
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="logo">MH<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#achievements">Awards</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="mailto:mekanhojayev97@gmail.com" class="nav-cta">Hire Me</a>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<section id="hero">
+  <div>
+    <div class="hero-badge"><div class="dot-pulse"></div>Open to Opportunities</div>
+    <h1 class="hero-name">Mekan<span class="outline">Hojayev</span></h1>
+    <p class="hero-typewriter"><span class="tw-prefix">&gt; </span><span id="tw-text"></span><span class="tw-cursor"></span></p>
+    <p class="hero-desc"><strong>Data Scientist</strong> &amp; <strong>Mathematical Olympiad Medalist</strong> with an MSc from <strong>Skoltech</strong>. Building intelligent systems at the intersection of rigorous mathematics and modern machine learning.</p>
+    <div class="hero-btns">
+      <a href="#research" class="btn-mag btn-primary"><span>View Research</span></a>
+      <a href="#contact" class="btn-mag btn-ghost"><span>Get in Touch →</span></a>
+    </div>
+  </div>
+
+  <div class="hero-card">
+    <div class="profile-avatar">MH</div>
+    <div class="card-name">Mekan Hojayev</div>
+    <div class="card-role">Data Science Developer</div>
+    <div class="card-stats">
+      <div class="cstat"><span class="cstat-num">20+</span><span class="cstat-label">Int'l Medals</span></div>
+      <div class="cstat"><span class="cstat-num">6</span><span class="cstat-label">Research Works</span></div>
+      <div class="cstat"><span class="cstat-num">3+</span><span class="cstat-label">Years in DS</span></div>
+      <div class="cstat"><span class="cstat-num">4.0</span><span class="cstat-label">Undergrad GPA</span></div>
+    </div>
+    <div class="card-langs">
+      <span class="lpill on">TK · Native</span>
+      <span class="lpill">RU · C1</span>
+      <span class="lpill">EN · B2</span>
+      <span class="lpill">TR · B2</span>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="s-head">
+    <div><div class="s-label">01 — Profile</div><h2 class="s-title">About Me</h2></div>
+    <div class="s-line"></div>
+  </div>
+  <div class="about-grid">
+    <div class="reveal-left">
+      <p class="about-body">An accomplished <strong>Data Scientist</strong> with a rare combination of deep mathematical training and production engineering experience. My journey began winning <span class="hl">international olympiad medals</span> across Europe, the Middle East, and Central Asia — over 20 medals in competitions like <strong>IMC</strong>, <strong>SEEMOUS</strong>, and the <strong>Putnam Mirror</strong>.<br><br>
+      I hold an <strong>MSc in Data Science, AI &amp; Machine Learning</strong> from the <strong>Skolkovo Institute of Science and Technology</strong>. Currently working as a <strong>Data Science Developer</strong> applying NLP, Computer Vision, and deep learning to real-world challenges.<br><br>
+      Before data science, I was an <strong>energy engineer</strong> — which gives me a first-principles problem-solving mindset most data scientists lack.</p>
+    </div>
+    <div class="reveal-right">
+      <p class="sk-head">// Technical Stack</p>
+      <div class="skills-grid">
+        <div class="skill-pill"><span class="dot"></span>Python</div>
+        <div class="skill-pill"><span class="dot"></span>JavaScript</div>
+        <div class="skill-pill"><span class="dot"></span>NLP</div>
+        <div class="skill-pill"><span class="dot"></span>Computer Vision</div>
+        <div class="skill-pill"><span class="dot"></span>Deep Learning</div>
+        <div class="skill-pill"><span class="dot"></span>Neural Networks</div>
+        <div class="skill-pill"><span class="dot"></span>Data Visualization</div>
+        <div class="skill-pill"><span class="dot"></span>Fine-tuning LLMs</div>
+        <div class="skill-pill"><span class="dot"></span>Recommender Sys.</div>
+        <div class="skill-pill"><span class="dot"></span>Research &amp; Analysis</div>
+        <div class="skill-pill"><span class="dot"></span>Django / Backend</div>
+        <div class="skill-pill"><span class="dot"></span>Git &amp; DevOps</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="s-head">
+    <div><div class="s-label">02 — Career</div><h2 class="s-title">Experience</h2></div>
+    <div class="s-line"></div>
+  </div>
+  <div class="timeline">
+    <div class="t-item reveal">
+      <div><span class="t-date">May 2023 — Present</span><span class="t-type">Full-time</span></div>
+      <div>
+        <div class="t-role">Data Science Developer</div>
+        <div class="t-company">↳ TrackTrack</div>
+        <p class="t-desc">Building AI-powered production systems using deep learning, NLP, and computer vision. Responsible for the full ML lifecycle — research, training, deployment, and monitoring of models.</p>
+      </div>
+    </div>
+    <div class="t-item reveal" style="transition-delay:.1s">
+      <div><span class="t-date">Oct 2021 — Oct 2022</span><span class="t-type">Academia</span></div>
+      <div>
+        <div class="t-role">Lecturer</div>
+        <div class="t-company">↳ Turkmen Agricultural Institute</div>
+        <p class="t-desc">Taught Electronics, Electrotechnics, and Automatics to undergraduate students. Developed curriculum materials and lab exercises for technical courses.</p>
+      </div>
+    </div>
+    <div class="t-item reveal" style="transition-delay:.2s">
+      <div><span class="t-date">Aug 2020 — Oct 2021</span><span class="t-type">Engineering</span></div>
+      <div>
+        <div class="t-role">Engineer</div>
+        <div class="t-company">↳ Dashoguz Energo</div>
+        <p class="t-desc">Energy systems engineering in electric and heat generation infrastructure. Applied optimization methods to improve operational efficiency of production facilities.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="s-head">
+    <div><div class="s-label">03 — Academic</div><h2 class="s-title">Education</h2></div>
+    <div class="s-line"></div>
+  </div>
+  <div class="edu-grid">
+    <div class="edu-card reveal-left">
+      <span class="edu-big">01</span>
+      <div class="edu-school">Skolkovo Institute of Science and Technology</div>
+      <div class="edu-degree">MSc — Data Science, AI &amp; Machine Learning</div>
+      <p style="font-size:14px;color:var(--dim);line-height:1.8">Research-intensive program at one of Russia's top science institutions. Focus on optimization, statistical learning, computer vision, and NLP. Collaborative research with leading AI labs.</p>
+      <div class="edu-foot"><span class="yr">2022 – 2024</span><span class="gpa">GPA 3.5 / 4.0</span></div>
+    </div>
+    <div class="edu-card reveal-right">
+      <span class="edu-big">02</span>
+      <div class="edu-school">State Energy Institute of Turkmenistan</div>
+      <div class="edu-degree">Specialist — Electric &amp; Heat Energy Generation</div>
+      <p style="font-size:14px;color:var(--dim);line-height:1.8">Five-year specialist degree with intensive coursework in engineering mathematics, thermodynamics, electrical systems design, and applied physics. Graduated with highest honors.</p>
+      <div class="edu-foot"><span class="yr">2015 – 2020</span><span class="gpa">GPA 4.0 / 4.0 · High Honors</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="s-head">
+    <div><div class="s-label">04 — Awards</div><h2 class="s-title">Achievements</h2></div>
+    <div class="s-line"></div>
+  </div>
+  <div class="medals-filter reveal">
+    <button class="f-btn active" onclick="filterMedals('all',this)">All</button>
+    <button class="f-btn" onclick="filterMedals('gold',this)">🥇 Gold</button>
+    <button class="f-btn" onclick="filterMedals('silver',this)">🥈 Silver</button>
+    <button class="f-btn" onclick="filterMedals('bronze',this)">🥉 Bronze</button>
+  </div>
+  <div class="medals-grid" id="medals-grid">
+    <a href="https://mathdep.itmo.ru/wp-content/uploads/2023/03/result_ncumc_18_ind.xlsx" target="_blank" class="medal-card" data-tier="gold"><div class="medal-emoji">🥇</div><div><div class="medal-comp">5th North Countries Universities Math Competition</div><div class="medal-award c-gold">1st Degree Diploma</div><div class="medal-loc">📍 Saint Petersburg, Russia · 2018</div></div></a>
+    <a href="https://drive.google.com/file/d/1hwDBMq7STU0rpOa36lW3qtOrXWQuWG25/view" target="_blank" class="medal-card" data-tier="gold"><div class="medal-emoji">🥇</div><div><div class="medal-comp">Putnam Mirror Competition 2018</div><div class="medal-award c-gold">1st Degree Diploma</div><div class="medal-loc">📍 Internet Olympiad · Dec 2018</div></div></a>
+    <a href="https://campuscore.ariel.ac.il/wp/i-olymp/2017-2018/" target="_blank" class="medal-card" data-tier="silver"><div class="medal-emoji">🥈</div><div><div class="medal-comp">13th Int'l Internet Math Olympiad — Super Final</div><div class="medal-award c-silver">1st Degree Diploma · Silver Medal</div><div class="medal-loc">📍 Ariel University, Israel · 2018</div></div></a>
+    <a href="https://www.imc-math.org.uk/?year=2019&section=results&item=bysum" target="_blank" class="medal-card" data-tier="silver"><div class="medal-emoji">🥈</div><div><div class="medal-comp">26th IMC for University Students</div><div class="medal-award c-silver">2nd Degree Diploma · Silver Medal</div><div class="medal-loc">📍 Blagoevgrad, Bulgaria · 2019</div></div></a>
+    <a href="https://www.imc-math.org.uk/?year=2018&section=results&item=bysum" target="_blank" class="medal-card" data-tier="silver"><div class="medal-emoji">🥈</div><div><div class="medal-comp">25th IMC for University Students</div><div class="medal-award c-silver">2nd Degree Diploma · Silver Medal</div><div class="medal-loc">📍 Blagoevgrad, Bulgaria · 2018</div></div></a>
+    <a href="https://math.etti.tuiasi.ro/seemous2018/" target="_blank" class="medal-card" data-tier="silver"><div class="medal-emoji">🥈</div><div><div class="medal-comp">12th SEEMOUS Mathematical Competition</div><div class="medal-award c-silver">2nd Degree Diploma · Silver Medal</div><div class="medal-loc">📍 Iasi, Romania · 2018</div></div></a>
+    <a href="https://nsom.fmi-plovdiv.org/ranking/" target="_blank" class="medal-card" data-tier="silver"><div class="medal-emoji">🥈</div><div><div class="medal-comp">НСОМ Bulgarian National Olympiad 2017</div><div class="medal-award c-silver">2nd Degree · Silver Medal</div><div class="medal-loc">📍 Pamporovo, Bulgaria · 2017</div></div></a>
+    <a href="https://nsom.fmi-sofia.bg/sites/default/files/images/files/nsom2016.pdf" target="_blank" class="medal-card" data-tier="silver"><div class="medal-emoji">🥈</div><div><div class="medal-comp">НСОМ Bulgarian National Olympiad 2016</div><div class="medal-award c-silver">2nd Degree · Silver Medal</div><div class="medal-loc">📍 Ruse, Bulgaria · 2016</div></div></a>
+
+    <div class="medals-extra" id="medals-extra">
+      <div class="medal-card" data-tier="silver"><div class="medal-emoji">🥈</div><div><div class="medal-comp">1st Al Khwarizmi Int'l Mathematical Olympiad</div><div class="medal-award c-silver">2nd Degree · Silver Medal</div><div class="medal-loc">📍 Urgench, Uzbekistan · 2018</div></div></div>
+      <a href="https://www.massee-org.eu/mathematical/seemous/item/65-seemous-2017-results" target="_blank" class="medal-card" data-tier="bronze"><div class="medal-emoji">🥉</div><div><div class="medal-comp">11th SEEMOUS Mathematical Competition</div><div class="medal-award c-bronze">3rd Degree · Bronze Medal</div><div class="medal-loc">📍 Ohrid, FYR Macedonia · 2017</div></div></a>
+      <a href="https://www.massee-org.eu/index.php/mathematical/competitions/item/52-seemous2016-documents" target="_blank" class="medal-card" data-tier="bronze"><div class="medal-emoji">🥉</div><div><div class="medal-comp">10th SEEMOUS Mathematical Competition</div><div class="medal-award c-bronze">3rd Degree · Bronze Medal</div><div class="medal-loc">📍 Protaras, Cyprus · 2016</div></div></a>
+      <a href="https://www.ariel.ac.il/wp/i-olymp/2016-2017/" target="_blank" class="medal-card" data-tier="bronze"><div class="medal-emoji">🥉</div><div><div class="medal-comp">12th Int'l Internet Math Olympiad — Super Final</div><div class="medal-award c-bronze">3rd Degree · Bronze Medal</div><div class="medal-loc">📍 Ariel University, Israel · 2017</div></div></a>
+      <a href="http://www.ncisc.agh.edu.pl/index.php?p=108" target="_blank" class="medal-card" data-tier="bronze"><div class="medal-emoji">🏅</div><div><div class="medal-comp">Nicolai Copernici Int'l Students Contest</div><div class="medal-award c-accent">Third Prize Award</div><div class="medal-loc">📍 Krakow, Poland · 2017</div></div></a>
+      <a href="https://mathdep.itmo.ru/wp-content/uploads/2023/03/result_ncumc_19_ind_main.pdf" target="_blank" class="medal-card" data-tier="silver"><div class="medal-emoji">🏅</div><div><div class="medal-comp">6th North Countries Universities Math Competition</div><div class="medal-award c-silver">2nd Degree Diploma</div><div class="medal-loc">📍 Saint Petersburg, Russia · 2019</div></div></a>
+      <a href="https://drive.google.com/file/d/1LguD1MauMCm4HRzSRUxEp2S93SOYxyT4/view" target="_blank" class="medal-card" data-tier="silver"><div class="medal-emoji">🏅</div><div><div class="medal-comp">Putnam Mirror Competition 2016</div><div class="medal-award c-silver">2nd Degree Diploma</div><div class="medal-loc">📍 Internet Olympiad · Dec 2016</div></div></a>
+      <a href="https://drive.google.com/file/d/1fOYuS7GAfAGFzyTQRCM3bxNMpk2sf5Mu/view" target="_blank" class="medal-card" data-tier="silver"><div class="medal-emoji">🏅</div><div><div class="medal-comp">Putnam Mirror Competition 2017</div><div class="medal-award c-silver">2nd Degree Diploma</div><div class="medal-loc">📍 Internet Olympiad · Dec 2017</div></div></a>
+      <a href="https://drive.google.com/file/d/1CATtdVcohRDe-uB90l7eqheFxNo2d6NL/view" target="_blank" class="medal-card" data-tier="silver"><div class="medal-emoji">🏅</div><div><div class="medal-comp">Putnam Mirror Competition 2019</div><div class="medal-award c-silver">2nd Degree Diploma</div><div class="medal-loc">📍 Internet Olympiad · Dec 2019</div></div></a>
+      <a href="https://drive.google.com/file/d/1uqmVUkHXre06GU05ps56hSVZAG_ZGaDo/view" target="_blank" class="medal-card" data-tier="bronze"><div class="medal-emoji">🥉</div><div><div class="medal-comp">14th Int'l Internet Math Olympiad — Final</div><div class="medal-award c-bronze">Bronze Medal</div><div class="medal-loc">📍 Ariel University, Israel · 2018</div></div></a>
+      <a href="https://campuscore.ariel.ac.il/wp/i-olymp/2018-2019/" target="_blank" class="medal-card" data-tier="silver"><div class="medal-emoji">🏅</div><div><div class="medal-comp">14th Int'l Internet Math Olympiad — Super Final</div><div class="medal-award c-silver">2nd Degree Diploma</div><div class="medal-loc">📍 Ariel University, Israel · 2019</div></div></a>
+      <a href="https://drive.google.com/file/d/0B8743g3flXQqd2YwWWZZc2tyYl94UkhlUjJHcFpMZWNyZlNz/view" target="_blank" class="medal-card" data-tier="bronze"><div class="medal-emoji">🥉</div><div><div class="medal-comp">15th Int'l Internet Math Olympiad — Final</div><div class="medal-award c-bronze">Bronze Medal</div><div class="medal-loc">📍 Ariel University, Israel · May 2019</div></div></a>
+    </div>
+  </div>
+  <button class="show-more reveal" id="medals-toggle" onclick="toggleMedals()">+ Show all achievements (11 more)</button>
+</section>
+
+<!-- RESEARCH -->
+<section id="research">
+  <div class="s-head">
+    <div><div class="s-label">05 — Publications</div><h2 class="s-title">Research</h2></div>
+    <div class="s-line"></div>
+  </div>
+  <div>
+    <div class="r-item reveal"><div class="r-year">2025</div><div><div class="r-title">Blockchain-Enhanced Text Extraction from Scanned PDFs</div><div class="r-tags"><span class="rtag">OCR</span><span class="rtag">Computer Vision</span><span class="rtag">Document Structure</span><span class="rtag">Blockchain</span></div></div><div class="r-arrow">→</div></div>
+    <div class="r-item reveal" style="transition-delay:.08s"><div class="r-year">2024</div><div><div class="r-title">Improved Achievability Bounds for Approximate Support Recovery Problem</div><div class="r-tags"><span class="rtag">Machine Learning</span><span class="rtag">Optimization</span><span class="rtag">IoT</span></div></div><div class="r-arrow">→</div></div>
+    <div class="r-item reveal" style="transition-delay:.16s"><div class="r-year">2023</div><div><div class="r-title">Connect Acts from External Sources with Local Acts of the Company</div><div class="r-tags"><span class="rtag">NLP</span><span class="rtag">Text Similarity</span><span class="rtag">Transformers</span></div></div><div class="r-arrow">→</div></div>
+    <div class="r-item reveal" style="transition-delay:.24s"><div class="r-year">2023</div><div><div class="r-title">Hybrid SVD for Feature Selection in Recommender Systems</div><div class="r-tags"><span class="rtag">Recommender Systems</span><span class="rtag">Feature Selection</span><span class="rtag">SVD</span><span class="rtag">Top-n</span></div></div><div class="r-arrow">→</div></div>
+    <div class="r-item reveal" style="transition-delay:.32s"><div class="r-year">2020</div><div><div class="r-title">Planning Conversion of Usual Plants to Combined Stream Gas Plants</div><div class="r-tags"><span class="rtag">Engineering Design</span><span class="rtag">Technology Selection</span><span class="rtag">Efficiency</span></div></div><div class="r-arrow">→</div></div>
+    <div class="r-item reveal" style="transition-delay:.4s"><div class="r-year">2018</div><div><div class="r-title">Analyzing the Relationship Between Mass and Pressure in Oil &amp; Gas Well Drilling</div><div class="r-tags"><span class="rtag">Pressure-Mass Correlation</span><span class="rtag">Drilling Modeling</span><span class="rtag">Math Optimization</span></div></div><div class="r-arrow">→</div></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="s-head">
+    <div><div class="s-label">06 — Connect</div><h2 class="s-title">Contact</h2></div>
+    <div class="s-line"></div>
+  </div>
+  <div class="contact-grid">
+    <div class="reveal-left">
+      <div class="contact-big">Let's build<br>something <span>great</span><br>together.</div>
+      <div class="c-links">
+        <a href="mailto:mekanhojayev97@gmail.com" class="c-link"><span class="c-link-ico">✉</span>mekanhojayev97@gmail.com</a>
+        <a href="tel:+99371679774" class="c-link"><span class="c-link-ico">☎</span>+993 71 67 97 74</a>
+        <a href="https://linkedin.com/in/mekan-hojayev-92b711298" target="_blank" class="c-link"><span class="c-link-ico">in</span>LinkedIn Profile</a>
+        <a href="https://t.me/mekanhojayev97" target="_blank" class="c-link"><span class="c-link-ico">✈</span>Telegram @mekanhojayev97</a>
+        <a href="https://wa.me/+79015138457" target="_blank" class="c-link"><span class="c-link-ico">📱</span>WhatsApp</a>
+        <a href="https://www.instagram.com/mekanhojayevofficial" target="_blank" class="c-link"><span class="c-link-ico">◻</span>Instagram @mekanhojayevofficial</a>
+      </div>
+    </div>
+    <div class="reveal-right">
+      <div class="contact-form">
+        <div class="f-row"><label class="f-label">Your email</label><input class="f-input" type="email" placeholder="you@example.com"></div>
+        <div class="f-row"><label class="f-label">Subject</label><input class="f-input" type="text" placeholder="Collaboration / Research / Hire"></div>
+        <div class="f-row"><label class="f-label">Message</label><textarea class="f-textarea" placeholder="Hello Mekan, I'd love to discuss..."></textarea></div>
+        <button class="send-btn">Send Message →</button>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="foot-l">MH<span>.</span> Mekan Hojayev</div>
+  <div class="foot-r">© 2025 · Data Scientist · Math Olympiad Medalist</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ── THREE.JS PARTICLE FIELD ── */
+(function(){
+  const canvas = document.getElementById('bg-canvas');
+  const renderer = new THREE.WebGLRenderer({canvas,alpha:true,antialias:false});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,0.1,1000);
+  camera.position.z = 80;
+
+  const COUNT = 1800;
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(COUNT*3);
+  const col = new Float32Array(COUNT*3);
+  for(let i=0;i<COUNT;i++){
+    pos[i*3]  =(Math.random()-.5)*290;
+    pos[i*3+1]=(Math.random()-.5)*290;
+    pos[i*3+2]=(Math.random()-.5)*200;
+    const t=Math.random();
+    col[i*3]  =t<.65?0:.8; col[i*3+1]=t<.65?1:.9; col[i*3+2]=t<.65?.88:1;
+  }
+  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  geo.setAttribute('color',new THREE.BufferAttribute(col,3));
+  const mat = new THREE.PointsMaterial({size:.5,vertexColors:true,transparent:true,opacity:.45,sizeAttenuation:true});
+  const pts = new THREE.Points(geo,mat);
+  scene.add(pts);
+
+  let mx=0,my=0;
+  document.addEventListener('mousemove',e=>{mx=(e.clientX/window.innerWidth-.5)*2;my=-(e.clientY/window.innerHeight-.5)*2;});
+  window.addEventListener('resize',()=>{renderer.setSize(window.innerWidth,window.innerHeight);camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();});
+
+  let t=0;
+  (function loop(){requestAnimationFrame(loop);t+=.0004;pts.rotation.y=t+mx*.08;pts.rotation.x=t*.4+my*.06;renderer.render(scene,camera);})();
+})();
+
+/* ── CURSOR ── */
+const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let rx=0,ry=0,cx=0,cy=0;
+document.addEventListener('mousemove',e=>{cx=e.clientX;cy=e.clientY;cur.style.left=cx+'px';cur.style.top=cy+'px';});
+(function animRing(){rx+=(cx-rx)*.12;ry+=(cy-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);})();
+
+/* ── SCROLL PROGRESS ── */
+const prog=document.getElementById('progress');
+window.addEventListener('scroll',()=>{const s=document.documentElement.scrollTop,h=document.documentElement.scrollHeight-window.innerHeight;prog.style.width=(s/h*100)+'%';});
+
+/* ── TYPEWRITER ── */
+const phrases=['Data Scientist & ML Engineer','Mathematical Olympiad Medalist','NLP · Computer Vision · Deep Learning','MSc Skoltech · 20+ Int\'l Medals'];
+let pi=0,ci=0,del=false;
+const twEl=document.getElementById('tw-text');
+function tw(){
+  const p=phrases[pi];
+  if(!del){twEl.textContent=p.slice(0,++ci);if(ci===p.length){del=true;setTimeout(tw,2200);return;}setTimeout(tw,55);}
+  else{twEl.textContent=p.slice(0,--ci);if(ci===0){del=false;pi=(pi+1)%phrases.length;setTimeout(tw,400);return;}setTimeout(tw,28);}
+}
+setTimeout(tw,1000);
+
+/* ── SCROLL REVEAL ── */
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.07,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>obs.observe(el));
+
+/* ── MAGNETIC BUTTONS ── */
+document.querySelectorAll('.btn-mag').forEach(btn=>{
+  btn.addEventListener('mousemove',e=>{const r=btn.getBoundingClientRect();btn.style.transform=`translate(${(e.clientX-(r.left+r.width/2))*.25}px,${(e.clientY-(r.top+r.height/2))*.35}px)`;});
+  btn.addEventListener('mouseleave',()=>{btn.style.transition='transform .5s cubic-bezier(.23,1,.32,1)';btn.style.transform='translate(0,0)';setTimeout(()=>btn.style.transition='',500);});
+});
+
+/* ── NAV HIDE/SHOW ── */
+let lastY=0;
+const nav=document.querySelector('nav');
+window.addEventListener('scroll',()=>{const y=window.scrollY;if(y>lastY&&y>80)nav.style.transform='translateY(-100%)';else nav.style.transform='translateY(0)';lastY=y;});
+
+/* ── MEDALS TOGGLE ── */
+function toggleMedals(){
+  const ex=document.getElementById('medals-extra'),btn=document.getElementById('medals-toggle');
+  const open=ex.classList.toggle('open');
+  btn.textContent=open?'− Hide extra achievements':'+ Show all achievements (11 more)';
+}
+
+/* ── MEDALS FILTER ── */
+function filterMedals(tier,btn){
+  document.querySelectorAll('.f-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  document.getElementById('medals-extra').classList.add('open');
+  document.querySelectorAll('.medal-card').forEach(c=>{c.style.display=(tier==='all'||c.dataset.tier===tier)?'flex':'none';});
+}
+</script>
+</body>
+</html>
