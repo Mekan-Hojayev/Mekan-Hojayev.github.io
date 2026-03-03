@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mekan Hojayev — Data Scientist</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070a0f;
+    --surface: #0d1117;
+    --surface2: #131920;
+    --border: #1e2a35;
+    --accent: #00e5ff;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --text: #e8edf2;
+    --text-dim: #6b7f8e;
+    --text-muted: #3a4f5e;
+    --gold: #f59e0b;
+    --silver: #94a3b8;
+    --bronze: #b45309;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ─── NOISE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ─── GRID BG ─── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 60px;
+    background: rgba(7,10,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  /* ─── HERO ─── */
+  #hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 60px 80px;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,229,255,0.07) 0%, transparent 70%);
+    top: -200px; left: -200px;
+    pointer-events: none;
+  }
+
+  .hero-glow2 {
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,58,237,0.06) 0%, transparent 70%);
+    bottom: -100px; right: 0;
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(52px, 8vw, 100px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -3px;
+    margin-bottom: 32px;
+    color: var(--text);
+  }
+
+  h1 .highlight {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--accent);
+    display: block;
+  }
+
+  .hero-desc {
+    max-width: 500px;
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 48px;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--accent);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text-dim);
+    border-color: var(--border);
+  }
+
+  .btn-outline:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .hero-stats {
+    position: absolute;
+    right: 60px;
+    bottom: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    text-align: right;
+  }
+
+  .stat-item {
+    font-family: 'Syne', sans-serif;
+  }
+
+  .stat-num {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--accent);
+    display: block;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ─── SECTIONS ─── */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 100px 60px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 64px;
+  }
+
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: var(--text);
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    max-width: 200px;
+  }
+
+  /* ─── ABOUT ─── */
+  #about {
+    border-top: 1px solid var(--border);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .about-text {
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 1.9;
+  }
+
+  .about-text strong {
+    color: var(--text);
+    font-weight: 400;
+  }
+
+  .skills-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .skill-item {
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 12px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+
+  .skill-item:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,229,255,0.04);
+  }
+
+  .skill-item::before {
+    content: '//';
+    color: var(--accent);
+    font-size: 10px;
+    opacity: 0.6;
+  }
+
+  /* ─── EXPERIENCE ─── */
+  #experience { border-top: 1px solid var(--border); }
+
+  .exp-timeline {
+    position: relative;
+  }
+
+  .exp-timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .exp-item {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 40px;
+    padding: 40px 0 40px 40px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .exp-item::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 46px;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+  }
+
+  .exp-date {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    padding-top: 4px;
+  }
+
+  .exp-role {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .exp-company {
+    font-size: 13px;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .exp-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  /* ─── EDUCATION ─── */
+  #education { border-top: 1px solid var(--border); }
+
+  .edu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .edu-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .edu-card:hover { border-color: var(--accent2); }
+
+  .edu-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: linear-gradient(to bottom, var(--accent2), var(--accent));
+  }
+
+  .edu-school {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .edu-degree {
+    font-size: 12px;
+    color: var(--accent2);
+    margin-bottom: 12px;
+    letter-spacing: 0.05em;
+  }
+
+  .edu-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .edu-gpa {
+    color: var(--accent3);
+  }
+
+  /* ─── ACHIEVEMENTS ─── */
+  #achievements { border-top: 1px solid var(--border); }
+
+  .medals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .medal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    transition: all 0.25s;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .medal-card:hover {
+    border-color: var(--text-muted);
+    background: var(--surface2);
+    transform: translateY(-2px);
+  }
+
+  .medal-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .medal-info { flex: 1; }
+
+  .medal-comp {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+
+  .medal-award {
+    font-size: 11px;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  .gold { color: var(--gold); }
+  .silver { color: var(--silver); }
+  .bronze { color: var(--bronze); }
+
+  .medal-location {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .show-more-btn {
+    margin-top: 24px;
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    border: 1px dashed var(--border);
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .show-more-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,229,255,0.04);
+  }
+
+  .hidden-medals { display: none; }
+  .hidden-medals.visible { display: contents; }
+
+  /* ─── RESEARCH ─── */
+  #research { border-top: 1px solid var(--border); }
+
+  .research-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .research-item {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 32px;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+
+  .research-year {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    padding-top: 4px;
+  }
+
+  .research-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .research-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    padding: 4px 10px;
+    background: rgba(0,229,255,0.06);
+    border: 1px solid rgba(0,229,255,0.15);
+    color: var(--accent);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ─── LANGUAGES ─── */
+  .lang-grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 48px;
+  }
+
+  .lang-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px 32px;
+    min-width: 140px;
+    text-align: center;
+  }
+
+  .lang-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .lang-level {
+    font-size: 11px;
+    color: var(--accent3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ─── CONTACT ─── */
+  #contact { border-top: 1px solid var(--border); }
+
+  .contact-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .contact-text {
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 1.8;
+    margin-bottom: 40px;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+
+  .contact-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,229,255,0.04);
+  }
+
+  .contact-link-icon {
+    width: 20px;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  label {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  input, textarea {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    outline: none;
+    resize: vertical;
+    transition: border-color 0.2s;
+  }
+
+  input:focus, textarea:focus {
+    border-color: var(--accent);
+  }
+
+  textarea { min-height: 120px; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    position: relative;
+    z-index: 1;
+    padding: 40px 60px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-copy {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .footer-copy span { color: var(--accent); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 3px;
+    height: 0.85em;
+    background: var(--accent);
+    margin-left: 4px;
+    vertical-align: middle;
+    animation: blink 1.1s step-end infinite;
+  }
+
+  .fade-up {
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards;
+  }
+
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.25s; }
+  .delay-3 { animation-delay: 0.4s; }
+  .delay-4 { animation-delay: 0.55s; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    section { padding: 80px 24px; }
+    #hero { padding: 100px 24px 120px; }
+    .hero-stats { right: 24px; bottom: 40px; }
+    .about-grid, .edu-grid, .contact-inner { grid-template-columns: 1fr; gap: 40px; }
+    .exp-item { grid-template-columns: 1fr; gap: 8px; padding-left: 30px; }
+    .research-item { grid-template-columns: 60px 1fr; gap: 20px; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">MH<span style="color:var(--text-dim)">.</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#achievements">Achievements</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <p class="hero-tag fade-up">Available for collaboration</p>
+
+  <h1 class="fade-up delay-1">
+    Mekan<br>
+    <span class="highlight">Hojayev</span>
+  </h1>
+
+  <p class="hero-desc fade-up delay-2">
+    Data Scientist &amp; Mathematical Olympiad Medalist. MSc in Data Science, AI &amp; Machine Learning from Skoltech. Building intelligent systems at the intersection of math and code.<span class="cursor"></span>
+  </p>
+
+  <div class="hero-cta fade-up delay-3">
+    <a href="#contact" class="btn btn-primary">Get in touch</a>
+    <a href="#research" class="btn btn-outline">View Research</a>
+  </div>
+
+  <div class="hero-stats fade-up delay-4">
+    <div class="stat-item">
+      <span class="stat-num">20+</span>
+      <span class="stat-label">Int'l medals</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">6+</span>
+      <span class="stat-label">Research projects</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">3+</span>
+      <span class="stat-label">Years in DS</span>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">About</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="about-grid">
+    <div>
+      <p class="about-text">
+        An accomplished <strong>Data Scientist</strong> with a strong mathematical background, evidenced by multiple International Olympiad medals across Europe, the Middle East, and beyond.
+        <br><br>
+        Holds an <strong>MSc in Data Science</strong> with a focus on AI and Machine Learning from Skolkovo Institute of Science and Technology. Currently working as a <strong>Data Science Developer</strong>, applying advanced knowledge in real-world projects spanning NLP, Computer Vision, and deep learning.
+        <br><br>
+        Prior background in engineering — a unique combination that brings rigorous problem-solving to every data challenge.
+      </p>
+      <div class="lang-grid">
+        <div class="lang-card">
+          <div class="lang-name">TK</div>
+          <div class="lang-level">Native</div>
+        </div>
+        <div class="lang-card">
+          <div class="lang-name">RU</div>
+          <div class="lang-level">C1</div>
+        </div>
+        <div class="lang-card">
+          <div class="lang-name">EN</div>
+          <div class="lang-level">B2</div>
+        </div>
+        <div class="lang-card">
+          <div class="lang-name">TR</div>
+          <div class="lang-level">B2</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <p style="font-size:11px;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:20px;">// Technical Skills</p>
+      <div class="skills-list">
+        <div class="skill-item">Python</div>
+        <div class="skill-item">JavaScript</div>
+        <div class="skill-item">NLP</div>
+        <div class="skill-item">Computer Vision</div>
+        <div class="skill-item">Deep Learning</div>
+        <div class="skill-item">Neural Networks</div>
+        <div class="skill-item">Data Visualization</div>
+        <div class="skill-item">Fine-tuning LLMs</div>
+        <div class="skill-item">Recommender Sys.</div>
+        <div class="skill-item">ML Research</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Experience</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="exp-timeline">
+    <div class="exp-item">
+      <div class="exp-date">May 2023 — Present</div>
+      <div>
+        <div class="exp-role">Data Science Developer</div>
+        <div class="exp-company">TrackTrack</div>
+        <p class="exp-desc">Applying advanced data science and machine learning techniques to build production-grade AI-powered systems.</p>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-date">Oct 2021 — Oct 2022</div>
+      <div>
+        <div class="exp-role">Lecturer</div>
+        <div class="exp-company">Turkmen Agricultural Institute</div>
+        <p class="exp-desc">Teaching technical and mathematical subjects to university students.</p>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-date">Aug 2020 — Oct 2021</div>
+      <div>
+        <div class="exp-role">Engineer</div>
+        <div class="exp-company">Dashoguz Energo</div>
+        <p class="exp-desc">Energy engineering, operational management, and technical problem-solving in a production environment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Education</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="edu-grid">
+    <div class="edu-card">
+      <div class="edu-school">Skolkovo Institute of Science and Technology</div>
+      <div class="edu-degree">MSc in Data Science, AI and Machine Learning</div>
+      <p style="font-size:13px;color:var(--text-dim);">Intensive research-oriented program focused on modern machine learning methods, optimization, and applied AI.</p>
+      <div class="edu-meta">
+        <span>2022 — 2024</span>
+        <span class="edu-gpa">GPA 3.5 / 4.0</span>
+      </div>
+    </div>
+
+    <div class="edu-card">
+      <div class="edu-school">State Energy Institute of Turkmenistan</div>
+      <div class="edu-degree">Specialist — Electric & Heat Energy Generation</div>
+      <p style="font-size:13px;color:var(--text-dim);">Five-year specialist degree in energy engineering with a strong foundation in mathematics and applied physics.</p>
+      <div class="edu-meta">
+        <span>2015 — 2020</span>
+        <span class="edu-gpa">GPA 4.0 / 4.0 · High Honors</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Achievements</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <p style="font-size:13px;color:var(--text-dim);margin-bottom:36px;max-width:560px;">International Mathematical Olympiad medals across multiple countries and competitions spanning 2016–2019.</p>
+
+  <div class="medals-grid">
+    <!-- VISIBLE: top 8 -->
+    <a href="https://www.imc-math.org.uk/?year=2019&section=results&item=bysum" target="_blank" class="medal-card">
+      <div class="medal-icon">🥈</div>
+      <div class="medal-info">
+        <div class="medal-comp">26th IMC for University Students</div>
+        <div class="medal-award silver">2nd Degree Diploma · Silver Medal</div>
+        <div class="medal-location">📍 Blagoevgrad, Bulgaria · 2019</div>
+      </div>
+    </a>
+
+    <a href="https://www.imc-math.org.uk/?year=2018&section=results&item=bysum" target="_blank" class="medal-card">
+      <div class="medal-icon">🥈</div>
+      <div class="medal-info">
+        <div class="medal-comp">25th IMC for University Students</div>
+        <div class="medal-award silver">2nd Degree Diploma · Silver Medal</div>
+        <div class="medal-location">📍 Blagoevgrad, Bulgaria · 2018</div>
+      </div>
+    </a>
+
+    <a href="https://math.etti.tuiasi.ro/seemous2018/" target="_blank" class="medal-card">
+      <div class="medal-icon">🥈</div>
+      <div class="medal-info">
+        <div class="medal-comp">12th SEEMOUS Competition</div>
+        <div class="medal-award silver">2nd Degree Diploma · Silver Medal</div>
+        <div class="medal-location">📍 Iasi, Romania · 2018</div>
+      </div>
+    </a>
+
+    <a href="https://campuscore.ariel.ac.il/wp/i-olymp/2017-2018/" target="_blank" class="medal-card">
+      <div class="medal-icon">🥈</div>
+      <div class="medal-info">
+        <div class="medal-comp">13th Int'l Internet Mathematics Olympiad (Super Final)</div>
+        <div class="medal-award silver">1st Degree Diploma · Silver Medal</div>
+        <div class="medal-location">📍 Ariel University, Israel · 2018</div>
+      </div>
+    </a>
+
+    <a href="https://nsom.fmi-plovdiv.org/ranking/" target="_blank" class="medal-card">
+      <div class="medal-icon">🥈</div>
+      <div class="medal-info">
+        <div class="medal-comp">НСОМ Bulgarian National Olympiad</div>
+        <div class="medal-award silver">2nd Degree Diploma · Silver Medal</div>
+        <div class="medal-location">📍 Pamporovo, Bulgaria · 2017</div>
+      </div>
+    </a>
+
+    <a href="https://nsom.fmi-sofia.bg/sites/default/files/images/files/nsom2016.pdf" target="_blank" class="medal-card">
+      <div class="medal-icon">🥈</div>
+      <div class="medal-info">
+        <div class="medal-comp">НСОМ Bulgarian National Olympiad</div>
+        <div class="medal-award silver">2nd Degree Diploma · Silver Medal</div>
+        <div class="medal-location">📍 Ruse, Bulgaria · 2016</div>
+      </div>
+    </a>
+
+    <div class="medal-card">
+      <div class="medal-icon">🥈</div>
+      <div class="medal-info">
+        <div class="medal-comp">1st Al Khwarizmi Int'l Math Olympiad (AKHIMO)</div>
+        <div class="medal-award silver">2nd Degree Diploma · Silver Medal</div>
+        <div class="medal-location">📍 Urgench, Uzbekistan · 2018</div>
+      </div>
+    </div>
+
+    <a href="https://www.massee-org.eu/mathematical/seemous/item/65-seemous-2017-results" target="_blank" class="medal-card">
+      <div class="medal-icon">🥉</div>
+      <div class="medal-info">
+        <div class="medal-comp">11th SEEMOUS Competition</div>
+        <div class="medal-award bronze">3rd Degree Diploma · Bronze Medal</div>
+        <div class="medal-location">📍 Ohrid, Macedonia · 2017</div>
+      </div>
+    </a>
+
+    <!-- HIDDEN: rest -->
+    <div class="hidden-medals" id="extraMedals">
+      <a href="https://www.massee-org.eu/index.php/mathematical/competitions/item/52-seemous2016-documents" target="_blank" class="medal-card">
+        <div class="medal-icon">🥉</div>
+        <div class="medal-info">
+          <div class="medal-comp">10th SEEMOUS Competition</div>
+          <div class="medal-award bronze">3rd Degree Diploma · Bronze Medal</div>
+          <div class="medal-location">📍 Protaras, Cyprus · 2016</div>
+        </div>
+      </a>
+
+      <a href="https://www.ariel.ac.il/wp/i-olymp/2016-2017/" target="_blank" class="medal-card">
+        <div class="medal-icon">🥉</div>
+        <div class="medal-info">
+          <div class="medal-comp">12th Int'l Internet Math Olympiad (Super Final)</div>
+          <div class="medal-award bronze">3rd Degree Diploma · Bronze Medal</div>
+          <div class="medal-location">📍 Ariel University, Israel · 2017</div>
+        </div>
+      </a>
+
+      <a href="http://www.ncisc.agh.edu.pl/index.php?p=108" target="_blank" class="medal-card">
+        <div class="medal-icon">🏅</div>
+        <div class="medal-info">
+          <div class="medal-comp">Nicolai Copernici Int'l Contest in Mathematics</div>
+          <div class="medal-award" style="color:var(--accent3)">Third Prize Award</div>
+          <div class="medal-location">📍 Krakow, Poland · 2017</div>
+        </div>
+      </a>
+
+      <a href="https://mathdep.itmo.ru/wp-content/uploads/2023/03/result_ncumc_19_ind_main.pdf" target="_blank" class="medal-card">
+        <div class="medal-icon">🏅</div>
+        <div class="medal-info">
+          <div class="medal-comp">6th North Countries Universities Math Competition</div>
+          <div class="medal-award" style="color:var(--accent3)">2nd Degree Diploma</div>
+          <div class="medal-location">📍 Saint Petersburg · 2019</div>
+        </div>
+      </a>
+
+      <a href="https://mathdep.itmo.ru/wp-content/uploads/2023/03/result_ncumc_18_ind.xlsx" target="_blank" class="medal-card">
+        <div class="medal-icon">🥇</div>
+        <div class="medal-info">
+          <div class="medal-comp">5th North Countries Universities Math Competition</div>
+          <div class="medal-award gold">1st Degree Diploma</div>
+          <div class="medal-location">📍 Saint Petersburg · 2018</div>
+        </div>
+      </a>
+
+      <a href="https://drive.google.com/file/d/1hwDBMq7STU0rpOa36lW3qtOrXWQuWG25/view" target="_blank" class="medal-card">
+        <div class="medal-icon">🥇</div>
+        <div class="medal-info">
+          <div class="medal-comp">Putnam Mirror Competition 2018</div>
+          <div class="medal-award gold">1st Degree Diploma</div>
+          <div class="medal-location">📍 Internet Olympiad · 2018</div>
+        </div>
+      </a>
+
+      <a href="https://drive.google.com/file/d/1LguD1MauMCm4HRzSRUxEp2S93SOYxyT4/view" target="_blank" class="medal-card">
+        <div class="medal-icon">🏅</div>
+        <div class="medal-info">
+          <div class="medal-comp">Putnam Mirror Competition 2016</div>
+          <div class="medal-award" style="color:var(--silver)">2nd Degree Diploma</div>
+          <div class="medal-location">📍 Internet Olympiad · 2016</div>
+        </div>
+      </a>
+
+      <a href="https://drive.google.com/file/d/1fOYuS7GAfAGFzyTQRCM3bxNMpk2sf5Mu/view" target="_blank" class="medal-card">
+        <div class="medal-icon">🏅</div>
+        <div class="medal-info">
+          <div class="medal-comp">Putnam Mirror Competition 2017</div>
+          <div class="medal-award" style="color:var(--silver)">2nd Degree Diploma</div>
+          <div class="medal-location">📍 Internet Olympiad · 2017</div>
+        </div>
+      </a>
+
+      <a href="https://drive.google.com/file/d/1CATtdVcohRDe-uB90l7eqheFxNo2d6NL/view" target="_blank" class="medal-card">
+        <div class="medal-icon">🏅</div>
+        <div class="medal-info">
+          <div class="medal-comp">Putnam Mirror Competition 2019</div>
+          <div class="medal-award" style="color:var(--silver)">2nd Degree Diploma</div>
+          <div class="medal-location">📍 Internet Olympiad · 2019</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <button class="show-more-btn" id="toggleBtn" onclick="toggleMedals()">
+    + Show all achievements (9 more)
+  </button>
+</section>
+
+<!-- RESEARCH -->
+<section id="research">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2 class="section-title">Research</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="research-list">
+    <div class="research-item">
+      <div class="research-year">2025</div>
+      <div>
+        <div class="research-title">Blockchain-Enhanced Text Extraction from Scanned PDFs</div>
+        <div class="research-tags">
+          <span class="tag">OCR</span>
+          <span class="tag">Computer Vision</span>
+          <span class="tag">Document Structure</span>
+          <span class="tag">Blockchain</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="research-item">
+      <div class="research-year">2024</div>
+      <div>
+        <div class="research-title">Improved Achievability Bounds for Approximate Support Recovery Problem</div>
+        <div class="research-tags">
+          <span class="tag">Machine Learning</span>
+          <span class="tag">Optimization</span>
+          <span class="tag">IoT</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="research-item">
+      <div class="research-year">2023</div>
+      <div>
+        <div class="research-title">Connect Acts from External Sources with Local Acts of the Company</div>
+        <div class="research-tags">
+          <span class="tag">NLP</span>
+          <span class="tag">Text Similarity</span>
+          <span class="tag">Transformers</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="research-item">
+      <div class="research-year">2023</div>
+      <div>
+        <div class="research-title">Hybrid SVD for Feature Selection in Recommender Systems</div>
+        <div class="research-tags">
+          <span class="tag">Recommender Systems</span>
+          <span class="tag">Feature Selection</span>
+          <span class="tag">SVD</span>
+          <span class="tag">Top-n</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="research-item">
+      <div class="research-year">2020</div>
+      <div>
+        <div class="research-title">Planning Conversion of Usual Plants to Combined Stream Gas Plants</div>
+        <div class="research-tags">
+          <span class="tag">Engineering Design</span>
+          <span class="tag">Tech Selection</span>
+          <span class="tag">Operational Efficiency</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="research-item">
+      <div class="research-year">2018</div>
+      <div>
+        <div class="research-title">Analyzing the Relationship Between Mass and Pressure in Oil and Gas Well Drilling</div>
+        <div class="research-tags">
+          <span class="tag">Pressure-mass Correlation</span>
+          <span class="tag">Drilling Models</span>
+          <span class="tag">Math Optimization</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2 class="section-title">Contact</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="contact-inner">
+    <div>
+      <p class="contact-text">Interested in collaborating on data science, ML research, or AI-powered systems? Let's talk.</p>
+
+      <div class="contact-links">
+        <a href="mailto:mekanhojayev97@gmail.com" class="contact-link">
+          <span class="contact-link-icon">✉</span>
+          mekanhojayev97@gmail.com
+        </a>
+        <a href="https://linkedin.com/in/mekan-hojayev-92b711298" target="_blank" class="contact-link">
+          <span class="contact-link-icon">in</span>
+          LinkedIn
+        </a>
+        <a href="https://t.me/mekanhojayev97" target="_blank" class="contact-link">
+          <span class="contact-link-icon">✈</span>
+          Telegram
+        </a>
+        <a href="https://wa.me/+79015138457" target="_blank" class="contact-link">
+          <span class="contact-link-icon">📱</span>
+          WhatsApp
+        </a>
+        <a href="https://www.instagram.com/mekanhojayevofficial" target="_blank" class="contact-link">
+          <span class="contact-link-icon">◻</span>
+          Instagram
+        </a>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <div class="form-field">
+        <label>Your email</label>
+        <input type="email" placeholder="you@example.com">
+      </div>
+      <div class="form-field">
+        <label>Message</label>
+        <textarea placeholder="Hello Mekan, I'd like to discuss..."></textarea>
+      </div>
+      <button class="btn btn-primary" style="border:none;">Send Message →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">© 2025 <span>Mekan Hojayev</span>. All rights reserved.</div>
+  <div class="footer-copy">Data Scientist · Math Olympiad Medalist</div>
+</footer>
+
+<script>
+  function toggleMedals() {
+    const extra = document.getElementById('extraMedals');
+    const btn = document.getElementById('toggleBtn');
+    extra.classList.toggle('visible');
+    btn.textContent = extra.classList.contains('visible')
+      ? '− Hide extra achievements'
+      : '+ Show all achievements (9 more)';
+  }
+
+  // Scroll-triggered fade-in for sections
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('section:not(#hero)').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
